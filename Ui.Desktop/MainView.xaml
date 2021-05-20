@@ -1,0 +1,105 @@
+﻿<Window x:Class="Ui.Desktop.MainView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Ui.Desktop"
+        mc:Ignorable="d"
+        
+        xmlns:viewmodel="clr-namespace:Logic.Ui;assembly=Logic.Ui"
+        
+        Title="{Binding Wnd_MainView_Title}" Height="389" Width="443"
+        x:Name="Wnd_MainView">
+
+    <Window.DataContext>
+        <viewmodel:MainViewModel/>
+    </Window.DataContext>
+
+    <Window.Resources>
+        <ControlTemplate x:Key="ErrorTemplate">
+            <DockPanel LastChildFill="True">
+                <Border DockPanel.Dock="Top" BorderBrush="Orange" BorderThickness="1">
+                    <AdornedElementPlaceholder />
+                </Border>
+            </DockPanel>
+        </ControlTemplate>
+
+        <Style TargetType="TextBox">
+            <Setter Property="Validation.ErrorTemplate" Value="{StaticResource ErrorTemplate}" />
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="true">
+                    <Setter Property="ToolTip" Value="{Binding RelativeSource={x:Static RelativeSource.Self},Path=(Validation.Errors).CurrentItem.ErrorContent}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <BooleanToVisibilityConverter x:Key="bool2visibility"/>
+        <local:IntToBrushConverter x:Key="string2brush"/>
+    </Window.Resources>
+
+    <StackPanel Background="{Binding Person_Age, Converter={StaticResource string2brush}}">
+
+        <Menu>
+            <MenuItem Header="Tools">
+                <MenuItem Header="Open second view"
+                          Command="{Binding Open2ndViewCmd}"
+                          CommandParameter="{Binding ElementName=Wnd_MainView}"/>
+                <MenuItem Header="Add new person"
+                          Command="{Binding AddCmd}"/>
+                <MenuItem Header="Delete selected person"
+                          Command="{Binding DeleteCmd}"
+                          CommandParameter="{Binding ElementName=Dgd_Persons, Path=SelectedItem}"/>
+            </MenuItem>
+        </Menu>
+
+        <GroupBox Header="ProgressBar-Binding" Margin="5">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Center">
+
+                    <Button x:Name="Btn_Start" Margin="2"
+                    Content="Start process"
+                    Padding="5"
+                    Command="{Binding StartCmd}"
+                    Visibility="{Binding HasNoErrors, Converter={StaticResource bool2visibility}}"/>
+
+                    <Button x:Name="Btn_Reset" Margin="2"
+                    Content="Reset process"
+                    Padding="5"
+                    Command="{Binding ResetCmd}"/>
+
+                    <Label x:Name="Lbl_Process"
+                   Content="{Binding Lbl_Process_Content}"/>
+
+                    <Label x:Name="Lbl_Length"
+                   Content="{Binding Lbl_Length_Content}"/>
+
+                </StackPanel>
+
+                <ProgressBar x:Name="Pgb_Process"
+                     Height="10" Margin="10"
+                     Minimum="0" Maximum="100"
+                     Value="{Binding Pgb_Process_Value}"/>
+            </StackPanel>
+        </GroupBox>
+
+        <GroupBox Header="DataBinding &amp; IDataErrorInfo" Margin="90,5">
+            <UniformGrid Margin="5">
+                <TextBlock Text="Firstname:"/>
+                <TextBox Text="{Binding Person_Firstname, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+
+
+                <TextBlock Text="Age:"/>
+                <TextBox Text="{Binding Person_Age, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+
+            </UniformGrid>
+        </GroupBox>
+
+        <GroupBox Header="ItemSources" Margin="5">
+            <DataGrid Height="100" Margin="5" 
+                      ItemsSource="{Binding PersonList}"
+                      SelectedItem="{Binding CurrentPerson}"
+                      x:Name="Dgd_Persons"/>
+        </GroupBox>
+    </StackPanel>
+</Window>

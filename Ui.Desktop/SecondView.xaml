@@ -1,0 +1,24 @@
+﻿<Window x:Class="Ui.Desktop.SecondView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Ui.Desktop"
+        xmlns:viewmodel="clr-namespace:Logic.Ui;assembly=Logic.Ui"
+        mc:Ignorable="d"
+        Title="SecondView" Height="110" Width="214"
+        x:Name="Wnd_SecondView">
+
+    <Window.DataContext>
+        <viewmodel:SecondViewModel/>
+    </Window.DataContext>
+    
+    <StackPanel Margin="10">
+        <Button Content="Ok"
+                Command="{Binding OkCmd}"
+                CommandParameter="{Binding ElementName=Wnd_SecondView}"/>
+        <Button Content="Cancel"
+                Command="{Binding CancelCmd}"
+                CommandParameter="{Binding ElementName=Wnd_SecondView}"/>
+    </StackPanel>
+</Window>
