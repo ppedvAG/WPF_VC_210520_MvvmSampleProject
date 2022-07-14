@@ -76,10 +76,10 @@ namespace Logic.Ui
             set { Person.CurrentPerson = value; OnPropertyChanged(); OnPropertyChanged(nameof(Person_Age)); OnPropertyChanged(nameof(Person_Firstname)); }
         }
 
-        private ObservableCollection<Person> Persons
+        public ObservableCollection<Person> PersonList
         {
             get { return Person.Persons; }
-            set { Persons = value; OnPropertyChanged(); }
+            set { Person.Persons = value; OnPropertyChanged(); }
         }
 
         #endregion
@@ -162,7 +162,7 @@ namespace Logic.Ui
 
             AddCmd.ExecuteMethod = p =>
             {
-                Persons.Add(
+                PersonList.Add(
                     new Person()
                     {
                         Firstname = "NewPerson",
@@ -175,7 +175,7 @@ namespace Logic.Ui
                 if (p is Person)
                 {
                     if (View.ShowMessageBox($"Should {(p as Person).Firstname} be deleted?", "Warning", 4) == 6)
-                        Persons.Remove(p as Person);
+                        PersonList.Remove(p as Person);
                 }
             };
             DeleteCmd.CanExecuteMethod = p => p is Person;
